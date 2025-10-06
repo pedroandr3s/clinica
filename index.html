@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Evaluación de Ensayos Clínicos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .results h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .trial-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .trial-item.apt {
+            border-left-color: #28a745;
+        }
+
+        .trial-item.not-apt {
+            border-left-color: #dc3545;
+        }
+
+        .trial-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .trial-percentage {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 5px 0;
+        }
+
+        .trial-percentage.apt {
+            color: #28a745;
+        }
+
+        .trial-percentage.not-apt {
+            color: #dc3545;
+        }
+
+        .trial-status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .trial-status.apt {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .trial-status.not-apt {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 Evaluación de Ensayos Clínicos</h1>
+        <p class="subtitle">Ingrese los datos del paciente para encontrar ensayos compatibles</p>
+
+        <form id="patientForm">
+            <div class="form-group">
+                <label for="nombre">Nombre del Paciente</label>
+                <input type="text" id="nombre" name="nombre" required placeholder="Ej: Juan Pérez">
+            </div>
+
+            <div class="form-group">
+                <label for="edad">Edad</label>
+                <input type="number" id="edad" name="edad" required min="0" max="120" placeholder="Ej: 45">
+            </div>
+
+            <div class="form-group">
+                <label for="diagnostico">Diagnóstico</label>
+                <textarea id="diagnostico" name="diagnostico" required placeholder="Describa el diagnóstico del paciente en detalle..."></textarea>
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">Buscar Ensayos Compatibles</button>
+        </form>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Analizando compatibilidad con ensayos clínicos...</p>
+            <p style="font-size: 12px; color: #666; margin-top: 5px;">Esto puede tomar unos momentos</p>
+        </div>
+
+        <div class="error" id="error"></div>
+
+        <div class="results" id="results">
+            <h2>📊 Resultados de Compatibilidad</h2>
+            <div id="resultsContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // IMPORTANTE: Cambia esta URL por la URL de tu webhook de n8n
+        const N8N_WEBHOOK_URL = 'https://naitus.app.n8n.cloud/webhook/ensayos-clinicos';
+
+        document.getElementById('patientForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const error = document.getElementById('error');
+
+            // Limpiar resultados previos
+            results.style.display = 'none';
+            error.style.display = 'none';
+
+            // Obtener datos del formulario
+            const formData = {
+                nombre: document.getElementById('nombre').value,
+                edad: parseInt(document.getElementById('edad').value),
+                diagnostico: document.getElementById('diagnostico').value
+            };
+
+            // Mostrar loading
+            submitBtn.disabled = true;
+            loading.style.display = 'block';
+
+            try {
+                const response = await fetch(N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error en la comunicación con el servidor');
+                }
+
+                const data = await response.json();
+
+                // Mostrar resultados
+                displayResults(data.ensayos || data);
+
+            } catch (err) {
+                error.textContent = `Error: ${err.message}. Verifica que la URL del webhook de n8n sea correcta.`;
+                error.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+
+        function displayResults(ensayos) {
+            const resultsContent = document.getElementById('resultsContent');
+            const results = document.getElementById('results');
+
+            if (!ensayos || ensayos.length === 0) {
+                resultsContent.innerHTML = '<p>No se encontraron ensayos clínicos compatibles.</p>';
+                results.style.display = 'block';
+                return;
+            }
+
+            let html = '';
+
+            ensayos.forEach((ensayo, index) => {
+                const isApt = ensayo.porcentaje >= 90;
+                const aptClass = isApt ? 'apt' : 'not-apt';
+                const statusText = isApt ? '✓ APTO' : '✗ NO APTO';
+
+                html += `
+                    <div class="trial-item ${aptClass}">
+                        <div class="trial-name">${index + 1}. ${ensayo.nombre}</div>
+                        <div class="trial-percentage ${aptClass}">${ensayo.porcentaje}%</div>
+                        <div class="trial-status ${aptClass}">${statusText}</div>
+                    </div>
+                `;
+            });
+
+            resultsContent.innerHTML = html;
+            results.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
