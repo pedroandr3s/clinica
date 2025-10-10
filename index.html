@@ -15,9 +15,6 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
         }
 
@@ -26,8 +23,8 @@
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             padding: 40px;
-            max-width: 600px;
-            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
         }
 
         h1 {
@@ -102,6 +99,11 @@
             transform: none;
         }
 
+        .btn-new-search {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            margin-top: 20px;
+        }
+
         .loading {
             display: none;
             text-align: center;
@@ -126,70 +128,201 @@
         .results {
             display: none;
             margin-top: 30px;
-            padding: 25px;
-            background: #f8f9fa;
-            border-radius: 15px;
         }
 
-        .results h2 {
-            color: #667eea;
-            margin-bottom: 20px;
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .summary-box h2 {
             font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .patient-info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .patient-info p {
+            margin-bottom: 5px;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .results-section h3 {
+            color: #667eea;
+            margin: 25px 0 15px 0;
+            font-size: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
         }
 
         .trial-item {
             background: white;
-            padding: 15px;
+            padding: 20px;
             border-radius: 10px;
             margin-bottom: 15px;
-            border-left: 4px solid #667eea;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
         }
 
-        .trial-item.apt {
+        .trial-item:hover {
+            transform: translateX(5px);
+        }
+
+        .trial-item.highly-eligible {
             border-left-color: #28a745;
+            background: linear-gradient(to right, #f0fff4 0%, white 100%);
         }
 
-        .trial-item.not-apt {
+        .trial-item.potentially-eligible {
+            border-left-color: #ffc107;
+            background: linear-gradient(to right, #fffef0 0%, white 100%);
+        }
+
+        .trial-item.limited-eligible {
+            border-left-color: #ff9800;
+            background: linear-gradient(to right, #fff8f0 0%, white 100%);
+        }
+
+        .trial-item.not-eligible {
             border-left-color: #dc3545;
+            background: linear-gradient(to right, #fff5f5 0%, white 100%);
+        }
+
+        .trial-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .trial-name {
             font-weight: 600;
             color: #333;
-            margin-bottom: 5px;
+            font-size: 16px;
+            flex: 1;
+            min-width: 250px;
         }
 
         .trial-percentage {
-            font-size: 24px;
+            font-size: 32px;
             font-weight: 700;
-            margin: 5px 0;
+            min-width: 80px;
+            text-align: right;
         }
 
-        .trial-percentage.apt {
-            color: #28a745;
-        }
-
-        .trial-percentage.not-apt {
-            color: #dc3545;
-        }
+        .trial-percentage.highly-eligible { color: #28a745; }
+        .trial-percentage.potentially-eligible { color: #ffc107; }
+        .trial-percentage.limited-eligible { color: #ff9800; }
+        .trial-percentage.not-eligible { color: #dc3545; }
 
         .trial-status {
             display: inline-block;
-            padding: 5px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
-            margin-top: 5px;
+            margin-bottom: 15px;
         }
 
-        .trial-status.apt {
+        .trial-status.highly-eligible {
             background: #d4edda;
             color: #155724;
         }
 
-        .trial-status.not-apt {
+        .trial-status.potentially-eligible {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .trial-status.limited-eligible {
+            background: #ffe5cc;
+            color: #cc5200;
+        }
+
+        .trial-status.not-eligible {
             background: #f8d7da;
             color: #721c24;
+        }
+
+        .trial-details {
+            display: grid;
+            gap: 10px;
+        }
+
+        .trial-info-row {
+            display: flex;
+            font-size: 14px;
+        }
+
+        .trial-info-label {
+            font-weight: 600;
+            color: #667eea;
+            min-width: 100px;
+        }
+
+        .trial-info-value {
+            color: #666;
+            flex: 1;
+        }
+
+        .trial-centers {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .trial-centers-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .center-item {
+            padding: 5px 10px;
+            background: white;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            font-size: 13px;
+            color: #555;
+            border-left: 3px solid #667eea;
         }
 
         .error {
@@ -200,11 +333,35 @@
             margin-top: 20px;
             display: none;
         }
+
+        .no-trials {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .trial-header {
+                flex-direction: column;
+            }
+
+            .trial-percentage {
+                text-align: left;
+            }
+
+            .summary-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🏥 Evaluación de Ensayos Clínicos</h1>
+        <h1>🏥 Sistema de Evaluación de Ensayos Clínicos</h1>
         <p class="subtitle">Ingrese los datos del paciente para encontrar ensayos compatibles</p>
 
         <form id="patientForm">
@@ -235,8 +392,15 @@
         <div class="error" id="error"></div>
 
         <div class="results" id="results">
-            <h2>📊 Resultados de Compatibilidad</h2>
-            <div id="resultsContent"></div>
+            <div class="summary-box">
+                <h2>📊 Resumen de Evaluación</h2>
+                <div class="patient-info" id="patientInfo"></div>
+                <div class="summary-stats" id="summaryStats"></div>
+            </div>
+
+            <div class="results-section" id="resultsSection"></div>
+
+            <button class="btn btn-new-search" onclick="newSearch()">Nueva Búsqueda</button>
         </div>
     </div>
 
@@ -281,47 +445,154 @@
                 }
 
                 const data = await response.json();
+                console.log('Datos recibidos:', data);
 
                 // Mostrar resultados
-                displayResults(data.ensayos || data);
+                displayResults(data);
 
             } catch (err) {
                 error.textContent = `Error: ${err.message}. Verifica que la URL del webhook de n8n sea correcta.`;
                 error.style.display = 'block';
+                console.error('Error:', err);
             } finally {
                 submitBtn.disabled = false;
                 loading.style.display = 'none';
             }
         });
 
-        function displayResults(ensayos) {
-            const resultsContent = document.getElementById('resultsContent');
+        function displayResults(data) {
             const results = document.getElementById('results');
+            const patientInfo = document.getElementById('patientInfo');
+            const summaryStats = document.getElementById('summaryStats');
+            const resultsSection = document.getElementById('resultsSection');
 
-            if (!ensayos || ensayos.length === 0) {
-                resultsContent.innerHTML = '<p>No se encontraron ensayos clínicos compatibles.</p>';
-                results.style.display = 'block';
-                return;
-            }
+            // Acceder a los datos correctamente (puede venir en array o directo)
+            const responseData = Array.isArray(data) ? data[0] : data;
+            
+            const paciente = responseData.paciente;
+            const resumen = responseData.resumen;
+            const ensayos = responseData.todosLosResultados || responseData.ensayos || [];
 
+            // Mostrar información del paciente
+            patientInfo.innerHTML = `
+                <p><strong>Paciente:</strong> ${paciente.nombre}</p>
+                <p><strong>Edad:</strong> ${paciente.edad} años</p>
+            `;
+
+            // Mostrar estadísticas
+            summaryStats.innerHTML = `
+                <div class="stat-item">
+                    <span class="stat-number">${resumen.totalEnsayos}</span>
+                    <span class="stat-label">Total Ensayos</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" style="color: #d4edda;">${resumen.altamenteElegibles}</span>
+                    <span class="stat-label">Altamente Elegibles</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" style="color: #fff3cd;">${resumen.potencialmenteElegibles}</span>
+                    <span class="stat-label">Potencialmente</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" style="color: #ffe5cc;">${resumen.elegibilidadLimitada}</span>
+                    <span class="stat-label">Limitada</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" style="color: #f8d7da;">${resumen.noElegibles}</span>
+                    <span class="stat-label">No Elegibles</span>
+                </div>
+            `;
+
+            // Mostrar ensayos organizados por categoría
             let html = '';
 
-            ensayos.forEach((ensayo, index) => {
-                const isApt = ensayo.porcentaje >= 90;
-                const aptClass = isApt ? 'apt' : 'not-apt';
-                const statusText = isApt ? '✓ APTO' : '✗ NO APTO';
+            // Función para determinar la clase CSS según elegibilidad
+            function getElegibilityClass(elegibilidad) {
+                if (elegibilidad === 'Altamente Elegible') return 'highly-eligible';
+                if (elegibilidad === 'Potencialmente Elegible') return 'potentially-eligible';
+                if (elegibilidad === 'Elegibilidad Limitada') return 'limited-eligible';
+                return 'not-eligible';
+            }
 
-                html += `
-                    <div class="trial-item ${aptClass}">
-                        <div class="trial-name">${index + 1}. ${ensayo.nombre}</div>
-                        <div class="trial-percentage ${aptClass}">${ensayo.porcentaje}%</div>
-                        <div class="trial-status ${aptClass}">${statusText}</div>
-                    </div>
-                `;
+            // Función para obtener el texto del estado
+            function getStatusText(elegibilidad) {
+                if (elegibilidad === 'Altamente Elegible') return '✓ ALTAMENTE ELEGIBLE';
+                if (elegibilidad === 'Potencialmente Elegible') return '⚠ POTENCIALMENTE ELEGIBLE';
+                if (elegibilidad === 'Elegibilidad Limitada') return '◐ ELEGIBILIDAD LIMITADA';
+                return '✗ NO ELEGIBLE';
+            }
+
+            // Agrupar ensayos por categorías
+            const categorias = [
+                { title: '🎯 Altamente Elegibles', ensayos: ensayos.filter(e => e.elegibilidad === 'Altamente Elegible') },
+                { title: '⚠️ Potencialmente Elegibles', ensayos: ensayos.filter(e => e.elegibilidad === 'Potencialmente Elegible') },
+                { title: '◐ Elegibilidad Limitada', ensayos: ensayos.filter(e => e.elegibilidad === 'Elegibilidad Limitada') },
+                { title: '❌ No Elegibles', ensayos: ensayos.filter(e => e.elegibilidad === 'No Elegible') }
+            ];
+
+            categorias.forEach(categoria => {
+                if (categoria.ensayos.length > 0) {
+                    html += `<h3>${categoria.title}</h3>`;
+                    
+                    categoria.ensayos.forEach((ensayo, index) => {
+                        const elegClass = getElegibilityClass(ensayo.elegibilidad);
+                        const statusText = getStatusText(ensayo.elegibilidad);
+
+                        html += `
+                            <div class="trial-item ${elegClass}">
+                                <div class="trial-header">
+                                    <div class="trial-name">${ensayo.ensayo.name}</div>
+                                    <div class="trial-percentage ${elegClass}">${ensayo.porcentajeFinal}%</div>
+                                </div>
+                                
+                                <div class="trial-status ${elegClass}">${statusText}</div>
+                                
+                                <div class="trial-details">
+                                    <div class="trial-info-row">
+                                        <span class="trial-info-label">Código:</span>
+                                        <span class="trial-info-value">${ensayo.ensayo.code}</span>
+                                    </div>
+                                    <div class="trial-info-row">
+                                        <span class="trial-info-label">Condición:</span>
+                                        <span class="trial-info-value">${ensayo.ensayo.condition}</span>
+                                    </div>
+                                    <div class="trial-info-row">
+                                        <span class="trial-info-label">Fase:</span>
+                                        <span class="trial-info-value">Fase ${ensayo.ensayo.phase}</span>
+                                    </div>
+                                    <div class="trial-info-row">
+                                        <span class="trial-info-label">Patrocinador:</span>
+                                        <span class="trial-info-value">${ensayo.ensayo.sponsorName}</span>
+                                    </div>
+                                </div>
+
+                                <div class="trial-centers">
+                                    <div class="trial-centers-title">📍 Centros Activos:</div>
+                                    ${ensayo.ensayo.activeCenters.map(center => 
+                                        `<div class="center-item">${center}</div>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
             });
 
-            resultsContent.innerHTML = html;
+            if (ensayos.length === 0) {
+                html = '<div class="no-trials"><p>No se encontraron ensayos clínicos compatibles.</p></div>';
+            }
+
+            resultsSection.innerHTML = html;
             results.style.display = 'block';
+
+            // Scroll suave a resultados
+            results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function newSearch() {
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('patientForm').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('nombre').focus();
         }
     </script>
 </body>
