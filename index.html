@@ -405,8 +405,7 @@
     </div>
 
     <script>
-        // IMPORTANTE: Cambia esta URL por la URL de tu webhook de n8n
-        const N8N_WEBHOOK_URL = 'https://n8n.naitus.cl/webhook/ensayos-clinicos';
+        const N8N_WEBHOOK_URL = 'https://naitus.app.n8n.cloud/webhook/ensayos-clinicos';
 
         document.getElementById('patientForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -416,18 +415,15 @@
             const results = document.getElementById('results');
             const error = document.getElementById('error');
 
-            // Limpiar resultados previos
             results.style.display = 'none';
             error.style.display = 'none';
 
-            // Obtener datos del formulario
             const formData = {
                 nombre: document.getElementById('nombre').value,
                 edad: parseInt(document.getElementById('edad').value),
                 diagnostico: document.getElementById('diagnostico').value
             };
 
-            // Mostrar loading
             submitBtn.disabled = true;
             loading.style.display = 'block';
 
@@ -447,7 +443,6 @@
                 const data = await response.json();
                 console.log('Datos recibidos:', data);
 
-                // Mostrar resultados
                 displayResults(data);
 
             } catch (err) {
@@ -466,20 +461,17 @@
             const summaryStats = document.getElementById('summaryStats');
             const resultsSection = document.getElementById('resultsSection');
 
-            // Acceder a los datos correctamente (puede venir en array o directo)
             const responseData = Array.isArray(data) ? data[0] : data;
             
             const paciente = responseData.paciente;
             const resumen = responseData.resumen;
             const ensayos = responseData.todosLosResultados || responseData.ensayos || [];
 
-            // Mostrar información del paciente
             patientInfo.innerHTML = `
                 <p><strong>Paciente:</strong> ${paciente.nombre}</p>
                 <p><strong>Edad:</strong> ${paciente.edad} años</p>
             `;
 
-            // Mostrar estadísticas
             summaryStats.innerHTML = `
                 <div class="stat-item">
                     <span class="stat-number">${resumen.totalEnsayos}</span>
@@ -503,10 +495,8 @@
                 </div>
             `;
 
-            // Mostrar ensayos organizados por categoría
             let html = '';
 
-            // Función para determinar la clase CSS según elegibilidad
             function getElegibilityClass(elegibilidad) {
                 if (elegibilidad === 'Altamente Elegible') return 'highly-eligible';
                 if (elegibilidad === 'Potencialmente Elegible') return 'potentially-eligible';
@@ -514,7 +504,6 @@
                 return 'not-eligible';
             }
 
-            // Función para obtener el texto del estado
             function getStatusText(elegibilidad) {
                 if (elegibilidad === 'Altamente Elegible') return '✓ ALTAMENTE ELEGIBLE';
                 if (elegibilidad === 'Potencialmente Elegible') return '⚠ POTENCIALMENTE ELEGIBLE';
@@ -522,7 +511,6 @@
                 return '✗ NO ELEGIBLE';
             }
 
-            // Agrupar ensayos por categorías
             const categorias = [
                 { title: '🎯 Altamente Elegibles', ensayos: ensayos.filter(e => e.elegibilidad === 'Altamente Elegible') },
                 { title: '⚠️ Potencialmente Elegibles', ensayos: ensayos.filter(e => e.elegibilidad === 'Potencialmente Elegible') },
@@ -585,7 +573,6 @@
             resultsSection.innerHTML = html;
             results.style.display = 'block';
 
-            // Scroll suave a resultados
             results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
@@ -597,4 +584,3 @@
     </script>
 </body>
 </html>
-
